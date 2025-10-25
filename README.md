@@ -96,15 +96,18 @@ garuda-spark-blockchain/
 │   └── deployment-scripts/     # CI/CD automation
 │
 ├── docs/
+│   ├── PRD.md                  # Product Requirements Document
+│   ├── EXECUTION_PLAN.md       # 23-day sprint tracker & progress
 │   ├── TEAM_ALLOCATION.md      # Team structure
+│   ├── bounty-original.md      # Official hackathon requirements
+│   ├── bounty-analysis.md      # Strategic analysis & recommendations
+│   ├── GETTING_STARTED.md      # Quick start guide
 │   └── team-workflows/
 │
 ├── archive/                     # Previous multi-project exploration
 │   ├── sumberbenar/            # Anti-Hoax project (not pursued)
 │   └── ecochain/               # Green Tech project (not pursued)
 │
-├── bounty-original.md          # Official hackathon requirements
-├── bounty-analysis.md          # Strategic analysis
 ├── CLAUDE.md                   # AI agent development guide
 └── README.md                   # This file
 ```
@@ -317,9 +320,11 @@ npm run build
 ## 📚 Key Documentation
 
 - **[CLAUDE.md](./CLAUDE.md)**: AI agent development guide
-- **[projects/koperasichain/README.md](./projects/koperasichain/README.md)**: Project-specific details
-- **[bounty-analysis.md](./bounty-analysis.md)**: Strategic analysis
+- **[docs/PRD.md](./docs/PRD.md)**: Product Requirements Document (Epic → Story → Task)
+- **[docs/EXECUTION_PLAN.md](./docs/EXECUTION_PLAN.md)**: 23-day sprint tracker & progress
+- **[docs/bounty-analysis.md](./docs/bounty-analysis.md)**: Strategic analysis
 - **[docs/TEAM_ALLOCATION.md](./docs/TEAM_ALLOCATION.md)**: Team structure & workflows
+- **[projects/koperasichain/README.md](./projects/koperasichain/README.md)**: Project-specific details
 
 ---
 

@@ -1,0 +1,742 @@
+{
+  "address": "4GVcmbRKrGWLR1fSttYYtgCmbbLSViLcYUpHvq4cwWZQ",
+  "metadata": {
+    "name": "koperasichain",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "add_member",
+      "docs": [
+        "Add a member to an existing cooperative"
+      ],
+      "discriminator": [
+        13,
+        116,
+        123,
+        130,
+        126,
+        198,
+        57,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "cooperative",
+          "writable": true
+        },
+        {
+          "name": "member",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  101,
+                  109,
+                  98,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "cooperative"
+              },
+              {
+                "kind": "account",
+                "path": "member_wallet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "member_wallet"
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "cooperative"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "cast_vote",
+      "docs": [
+        "Cast a vote on a proposal"
+      ],
+      "discriminator": [
+        20,
+        212,
+        15,
+        189,
+        69,
+        180,
+        69,
+        151
+      ],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true
+        },
+        {
+          "name": "cooperative"
+        },
+        {
+          "name": "member",
+          "docs": [
+            "The member account of the voter (ensures they're a member)"
+          ]
+        },
+        {
+          "name": "vote",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  111,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "proposal"
+              },
+              {
+                "kind": "account",
+                "path": "voter"
+              }
+            ]
+          }
+        },
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vote_choice",
+          "type": {
+            "defined": {
+              "name": "VoteChoice"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "create_cooperative",
+      "docs": [
+        "Create a new cooperative with governance rules"
+      ],
+      "discriminator": [
+        245,
+        29,
+        181,
+        28,
+        173,
+        46,
+        72,
+        154
+      ],
+      "accounts": [
+        {
+          "name": "cooperative",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  111,
+                  112,
+                  101,
+                  114,
+                  97,
+                  116,
+                  105,
+                  118,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              },
+              {
+                "kind": "arg",
+                "path": "name"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "voting_period_days",
+          "type": "u8"
+        },
+        {
+          "name": "quorum_percentage",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "create_proposal",
+      "docs": [
+        "Create a proposal for members to vote on"
+      ],
+      "discriminator": [
+        132,
+        116,
+        68,
+        174,
+        216,
+        160,
+        198,
+        22
+      ],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  112,
+                  111,
+                  115,
+                  97,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "cooperative"
+              },
+              {
+                "kind": "arg",
+                "path": "title"
+              }
+            ]
+          }
+        },
+        {
+          "name": "cooperative"
+        },
+        {
+          "name": "member",
+          "docs": [
+            "The member account of the proposer (ensures they're a member)"
+          ]
+        },
+        {
+          "name": "proposer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "proposal_type",
+          "type": {
+            "defined": {
+              "name": "ProposalType"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Cooperative",
+      "discriminator": [
+        37,
+        10,
+        29,
+        214,
+        64,
+        99,
+        4,
+        116
+      ]
+    },
+    {
+      "name": "Member",
+      "discriminator": [
+        54,
+        19,
+        162,
+        21,
+        29,
+        166,
+        17,
+        198
+      ]
+    },
+    {
+      "name": "Proposal",
+      "discriminator": [
+        26,
+        94,
+        189,
+        187,
+        116,
+        136,
+        53,
+        33
+      ]
+    },
+    {
+      "name": "Vote",
+      "discriminator": [
+        96,
+        91,
+        104,
+        57,
+        145,
+        35,
+        172,
+        155
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidName",
+      "msg": "Cooperative name must be 1-50 characters"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidDescription",
+      "msg": "Description must be 200 characters or less"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidVotingPeriod",
+      "msg": "Voting period must be between 1 and 30 days"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidQuorum",
+      "msg": "Quorum percentage must be between 1 and 100"
+    },
+    {
+      "code": 6004,
+      "name": "Unauthorized",
+      "msg": "Only the cooperative authority can perform this action"
+    },
+    {
+      "code": 6005,
+      "name": "MemberCountOverflow",
+      "msg": "Member count overflow"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidProposalTitle",
+      "msg": "Proposal title must be 1-100 characters"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidProposalDescription",
+      "msg": "Proposal description must be 1-500 characters"
+    },
+    {
+      "code": 6008,
+      "name": "ProposalNotActive",
+      "msg": "Proposal is not active"
+    },
+    {
+      "code": 6009,
+      "name": "VotingPeriodEnded",
+      "msg": "Voting period has ended"
+    },
+    {
+      "code": 6010,
+      "name": "MemberNotActive",
+      "msg": "Member is not active"
+    },
+    {
+      "code": 6011,
+      "name": "NotAMember",
+      "msg": "Not a member of this cooperative"
+    },
+    {
+      "code": 6012,
+      "name": "VoteCountOverflow",
+      "msg": "Vote count overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "Cooperative",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "docs": [
+              "Authority (creator/admin) of the cooperative"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "docs": [
+              "Name of the cooperative (max 50 chars)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "docs": [
+              "Description (max 200 chars)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "member_count",
+            "docs": [
+              "Number of members in the cooperative"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "voting_period_days",
+            "docs": [
+              "Voting period in days (1-30)"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "quorum_percentage",
+            "docs": [
+              "Minimum percentage of members required to vote (1-100)"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Unix timestamp when cooperative was created"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump seed"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Member",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "cooperative",
+            "docs": [
+              "The cooperative this member belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "wallet",
+            "docs": [
+              "Member's wallet address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "joined_at",
+            "docs": [
+              "Unix timestamp when member joined"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "is_active",
+            "docs": [
+              "Whether the member is currently active"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump seed"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Proposal",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "cooperative",
+            "docs": [
+              "The cooperative this proposal belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "proposer",
+            "docs": [
+              "Wallet that created the proposal"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "title",
+            "docs": [
+              "Title of the proposal (max 100 chars)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "docs": [
+              "Description (max 500 chars)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "proposal_type",
+            "docs": [
+              "Type of proposal"
+            ],
+            "type": {
+              "defined": {
+                "name": "ProposalType"
+              }
+            }
+          },
+          {
+            "name": "yes_votes",
+            "docs": [
+              "Number of yes votes"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "no_votes",
+            "docs": [
+              "Number of no votes"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "abstain_votes",
+            "docs": [
+              "Number of abstain votes"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "status",
+            "docs": [
+              "Current status of the proposal"
+            ],
+            "type": {
+              "defined": {
+                "name": "ProposalStatus"
+              }
+            }
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Unix timestamp when proposal was created"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "ends_at",
+            "docs": [
+              "Unix timestamp when voting period ends"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump seed"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProposalStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Passed"
+          },
+          {
+            "name": "Failed"
+          },
+          {
+            "name": "Executed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProposalType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "TextProposal"
+          },
+          {
+            "name": "FundAllocation"
+          },
+          {
+            "name": "MemberRemoval"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Vote",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "proposal",
+            "docs": [
+              "The proposal being voted on"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "voter",
+            "docs": [
+              "Wallet of the voter"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "vote_choice",
+            "docs": [
+              "The vote choice"
+            ],
+            "type": {
+              "defined": {
+                "name": "VoteChoice"
+              }
+            }
+          },
+          {
+            "name": "voted_at",
+            "docs": [
+              "Unix timestamp when vote was cast"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump seed"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteChoice",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Yes"
+          },
+          {
+            "name": "No"
+          },
+          {
+            "name": "Abstain"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -175,8 +175,10 @@ Validate these throughout development:
 ## KoperasiChain Quick Links
 
 - **Project README**: [projects/koperasichain/README.md](../projects/koperasichain/README.md)
-- **Team Structure**: [docs/TEAM_ALLOCATION.md](../docs/TEAM_ALLOCATION.md)
-- **Strategic Analysis**: [bounty-analysis.md](../bounty-analysis.md)
+- **PRD**: [PRD.md](./PRD.md) - Product Requirements Document
+- **Execution Plan**: [EXECUTION_PLAN.md](./EXECUTION_PLAN.md) - 23-day sprint tracker
+- **Team Structure**: [TEAM_ALLOCATION.md](./TEAM_ALLOCATION.md)
+- **Strategic Analysis**: [bounty-analysis.md](./bounty-analysis.md)
 - **Technical Guide**: [CLAUDE.md](../CLAUDE.md)
 
 ## Need Help?

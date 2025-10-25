@@ -19,13 +19,17 @@ garuda-spark-blockchain/                # Main repository
 │   ├── solana-utils/                   # Common Solana helpers
 │   └── deployment-scripts/             # CI/CD automation
 ├── docs/
+│   ├── PRD.md                          # Product Requirements Document
+│   ├── EXECUTION_PLAN.md               # 23-day sprint tracker & progress
 │   ├── TEAM_ALLOCATION.md              # Team structure & responsibilities
+│   ├── bounty-original.md              # Official hackathon requirements
+│   ├── bounty-analysis.md              # Strategic analysis & recommendations
+│   ├── GETTING_STARTED.md              # Quick start guide
 │   └── team-workflows/
 ├── archive/                            # Previous multi-project exploration (not pursued)
 │   ├── sumberbenar/                    # Anti-Hoax project (archived)
 │   └── ecochain/                       # Green Tech project (archived)
-├── bounty-original.md                  # Official hackathon requirements
-├── bounty-analysis.md                  # Strategic analysis & recommendations
+├── README.md                           # Project overview
 └── CLAUDE.md                           # This file
 ```
 
@@ -452,10 +456,12 @@ User Action → Wallet Adapter → Smart Contract → On-chain Transaction
 ## Resources & Documentation
 
 **Project Documentation**:
-- `bounty-original.md` - Complete hackathon requirements
-- `bounty-analysis.md` - Comprehensive strategic analysis (READ THIS)
+- `docs/PRD.md` - Product Requirements Document (Epic → Story → Task)
+- `docs/EXECUTION_PLAN.md` - 23-day sprint tracker & progress
+- `docs/bounty-original.md` - Complete hackathon requirements
+- `docs/bounty-analysis.md` - Comprehensive strategic analysis (READ THIS)
+- `docs/GETTING_STARTED.md` - Quick start guide
 - `projects/koperasichain/README.md` - Project-specific details
-- `resources/GETTING_STARTED.md` - Quick start guide
 
 **Recommended Reading**:
 - Solana Documentation: https://docs.solana.com

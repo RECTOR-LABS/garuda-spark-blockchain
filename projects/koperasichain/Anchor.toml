@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-koperasichain = "98Jno7mFFMK31qr3i8pT41YjtryFubxzEtW3uLqtB7YX"
+koperasichain = "RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za"
 
 [registry]
 url = "https://api.apr.dev"

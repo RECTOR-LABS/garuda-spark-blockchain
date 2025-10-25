@@ -68,7 +68,7 @@
 - ✅ Cooperative account structure (PDA-based, scalable)
 - ✅ Member account structure (cooperative, wallet, joined_at, is_active)
 - ✅ 13 passing tests (7 for create_cooperative, 4 for add_member)
-- ✅ Deployed to Devnet: `4GVcmbRKrGWLR1fSttYYtgCmbbLSViLcYUpHvq4cwWZQ`
+- ✅ Deployed to Devnet: `RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za` (Vanity address!)
 
 **Frontend (Next.js 14 + TypeScript + TailwindCSS)**
 - ✅ Home page with cooperative creation form

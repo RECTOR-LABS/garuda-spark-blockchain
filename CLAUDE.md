@@ -62,6 +62,21 @@ garuda-spark-blockchain/                # Main repository
 - Pitch deck presentation
 - Colosseum Cyberpunk submission
 
+### Smart Contract Deployment
+
+**Current Deployed Program (Devnet)**:
+- **Program ID**: `RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za`
+- **Network**: Solana Devnet
+- **Features**: Cooperative creation, member management, proposal voting
+- **Vanity Address**: Starts with "REC" (RECTOR's initials) for professional branding
+- **Explorer**: https://explorer.solana.com/address/RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za?cluster=devnet
+
+**Vanity Address Generation**:
+- Generated using `solana-keygen grind --starts-with REC:1`
+- Keypair stored at: `target/deploy/koperasichain-keypair.json`
+- Benefits: Memorable, professional, brand-aligned program address
+- To generate new vanity address: `solana-keygen grind --starts-with <PREFIX>:1`
+
 ## Working with KoperasiChain
 
 ### Development Workflow
@@ -254,24 +269,43 @@ npm run test:e2e
 
 ## Architecture Patterns
 
-### Smart Contract Structure (Anchor)
+### Smart Contract Structure (Anchor) - MODULARIZED ✅
+
+**Current Implementation** (Fully modularized for scalability):
+
 ```
-programs/
-├── koperasichain/
-│   ├── src/
-│   │   ├── lib.rs                      # Main program logic
-│   │   ├── instructions/               # Instruction handlers
-│   │   │   ├── create_cooperative.rs
-│   │   │   ├── add_member.rs
-│   │   │   ├── create_proposal.rs
-│   │   │   ├── vote.rs
-│   │   │   └── distribute_dividends.rs
-│   │   ├── state/                      # Account structures
-│   │   │   ├── cooperative.rs
-│   │   │   ├── member.rs
-│   │   │   └── proposal.rs
-│   │   └── errors.rs                   # Custom errors
-│   └── Cargo.toml
+programs/koperasichain/src/
+├── lib.rs                          # Program entry point (clean, delegates to modules)
+├── errors.rs                       # Custom error codes
+├── instructions/                   # Instruction handlers (modularized)
+│   ├── mod.rs                      # Module exports
+│   ├── create_cooperative.rs       # Create cooperative logic + context
+│   ├── add_member.rs               # Add member logic + context
+│   ├── create_proposal.rs          # Create proposal logic + context
+│   └── cast_vote.rs                # Vote casting logic + context
+└── state/                          # Account structures (modularized)
+    ├── mod.rs                      # Module exports
+    ├── cooperative.rs              # Cooperative account struct
+    ├── member.rs                   # Member account struct
+    ├── proposal.rs                 # Proposal account struct + enums
+    └── vote.rs                     # Vote account struct + enums
+```
+
+**Benefits of Modular Structure**:
+- ✅ Each instruction in its own file (easier navigation)
+- ✅ Clear separation of concerns (state vs logic vs errors)
+- ✅ Easier to add new features (treasury, dividends, etc.)
+- ✅ Better for team collaboration (10-14 developers)
+- ✅ Follows Anchor Framework best practices
+- ✅ Smaller, focused files (less scrolling fatigue)
+
+**Ready for Expansion**:
+```
+instructions/
+├── ... existing files ...
+├── deposit_funds.rs         # Treasury (future)
+├── withdraw_funds.rs        # Treasury (future)
+└── distribute_dividends.rs  # Dividends (future)
 ```
 
 ### Frontend Structure (Next.js App Router)

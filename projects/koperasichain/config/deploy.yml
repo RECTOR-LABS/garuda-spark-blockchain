@@ -1,0 +1,176 @@
+# ═══════════════════════════════════════════════════
+# Kamal Configuration - KoperasiChain Deployment
+# ═══════════════════════════════════════════════════
+# Context7: https://context7.com/basecamp/kamal-site
+# Pattern: Zero-downtime deployment with SSL
+# ═══════════════════════════════════════════════════
+
+# Service name (used for Docker image and container naming)
+service: koperasichain
+
+# Docker image configuration
+image: rectorspace/koperasichain
+
+# ───────────────────────────────────────────────────
+# Server Configuration
+# ───────────────────────────────────────────────────
+servers:
+  web:
+    # IMPORTANT: Update with your actual server IP or SSH host alias
+    # Options from your ~/.ssh/config:
+    # - sanctum (176.222.53.185)
+    # - recmev (176.222.53.185)
+    # - website (176.222.53.185)
+    # - tester (185.70.184.150)
+    hosts:
+      - sanctum  # Change this to your preferred VPS
+    labels:
+      traefik.http.routers.koperasichain.rule: Host(`koperasichain.rectorspace.com`)
+      traefik.http.routers.koperasichain.entrypoints: websecure
+      traefik.http.routers.koperasichain.tls: true
+      traefik.http.routers.koperasichain.tls.certresolver: letsencrypt
+
+# ───────────────────────────────────────────────────
+# Docker Registry Authentication
+# ───────────────────────────────────────────────────
+registry:
+  # Docker Hub (default)
+  server: docker.io
+  username: rectorspace  # Change to your Docker Hub username
+
+  # Password from secrets file
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+  # Alternative: GitHub Container Registry
+  # server: ghcr.io
+  # username: rz1989s
+  # password:
+  #   - KAMAL_REGISTRY_PASSWORD
+
+# ───────────────────────────────────────────────────
+# Traefik Reverse Proxy Configuration
+# ───────────────────────────────────────────────────
+proxy:
+  # Traefik is Kamal's built-in reverse proxy
+  ssl: true
+  host: koperasichain.rectorspace.com
+
+  # Health check configuration
+  healthcheck:
+    path: /api/health
+    interval: 10s  # How often to check
+    timeout: 3s    # Request timeout
+    port: 3000
+
+  # ⚠️ PORT CONFLICT RESOLUTION
+  # If your VPS already uses ports 80/443 (e.g., Nginx/Apache):
+  #
+  # Option 1: Use custom ports (uncomment below)
+  # publish:
+  #   - "8080:80"   # HTTP on port 8080
+  #   - "8443:443"  # HTTPS on port 8443
+  #
+  # Option 2: Configure existing Nginx to proxy to Kamal
+  # (Keep default 80/443, configure Nginx upstream)
+  #
+  # Option 3: Use different domain/subdomain
+  # (Kamal uses 80/443, existing apps use other domains)
+
+# ───────────────────────────────────────────────────
+# Environment Variables
+# ───────────────────────────────────────────────────
+env:
+  # Clear (non-secret) environment variables
+  clear:
+    NODE_ENV: production
+    PORT: 3000
+    # Solana RPC (public Devnet)
+    NEXT_PUBLIC_RPC_ENDPOINT: https://api.devnet.solana.com
+    NEXT_PUBLIC_NETWORK: devnet
+    NEXT_PUBLIC_PROGRAM_ID: RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za
+
+  # Secret environment variables (from .kamal/secrets)
+  # Add secrets here as needed:
+  # secret:
+  #   - DATABASE_URL
+  #   - SUPABASE_KEY
+
+# ───────────────────────────────────────────────────
+# Build Configuration
+# ───────────────────────────────────────────────────
+builder:
+  # Build context (where Dockerfile is located)
+  context: ./app
+  dockerfile: ./app/Dockerfile
+
+  # Build arguments (if needed)
+  # args:
+  #   NODE_ENV: production
+
+# ───────────────────────────────────────────────────
+# Deployment Configuration
+# ───────────────────────────────────────────────────
+# Readiness delay: Wait before starting health checks
+readiness_delay: 10  # seconds (Next.js needs time to start)
+
+# Deploy timeout: Max time to wait for deployment
+deploy_timeout: 120  # seconds (2 minutes)
+
+# Container retention: How many old versions to keep for rollback
+retain_containers: 3
+
+# ───────────────────────────────────────────────────
+# Accessories (Optional Services)
+# ───────────────────────────────────────────────────
+# Uncomment if you need PostgreSQL, Redis, etc.
+#
+# accessories:
+#   postgres:
+#     image: postgres:16-alpine
+#     host: sanctum
+#     port: 5432
+#     env:
+#       secret:
+#         - POSTGRES_PASSWORD
+#       clear:
+#         POSTGRES_USER: koperasichain
+#         POSTGRES_DB: koperasichain_production
+#     directories:
+#       - data/postgres:/var/lib/postgresql/data
+
+#   redis:
+#     image: redis:7-alpine
+#     host: sanctum
+#     port: 6379
+#     directories:
+#       - data/redis:/data
+
+# ───────────────────────────────────────────────────
+# SSH Configuration
+# ───────────────────────────────────────────────────
+# Kamal uses SSH to connect to servers
+# Default: Uses your ~/.ssh/config settings
+#
+# Override if needed:
+# ssh:
+#   user: sanctum  # SSH user (from your ~/.ssh/config)
+#   port: 22
+
+# ───────────────────────────────────────────────────
+# Volumes (Persistent Storage)
+# ───────────────────────────────────────────────────
+# Uncomment if you need persistent data
+#
+# volumes:
+#   - "koperasichain-storage:/app/storage"
+
+# ═══════════════════════════════════════════════════
+# Context7 Best Practices Applied:
+# ═══════════════════════════════════════════════════
+# ✅ Zero-downtime: Health checks + readiness delay
+# ✅ Security: SSL enabled, secrets management
+# ✅ Rollback: Container retention (3 versions)
+# ✅ Monitoring: Health check endpoint
+# ✅ Production-ready: Proper timeouts and intervals
+# ═══════════════════════════════════════════════════

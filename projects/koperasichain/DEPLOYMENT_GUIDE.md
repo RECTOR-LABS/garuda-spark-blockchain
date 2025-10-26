@@ -1,388 +1,753 @@
-# Vercel Deployment Guide - KoperasiChain
+# Kamal Deployment Guide - KoperasiChain
+
 **Project:** KoperasiChain Frontend
 **Framework:** Next.js 15.5.4
-**Target:** Vercel Production
+**Deployment:** Kamal (Zero-downtime Docker deployment)
+**Target:** VPS (rectorspace.com)
+
+**Context7 Reference:** https://context7.com/basecamp/kamal-site
 
 ---
 
-## 🚀 Deployment Steps
+## 🎯 Deployment Strategy
 
-### Step 1: Prepare Repository
+KoperasiChain uses **Kamal** for production deployment:
+- ✅ Zero-downtime deployments
+- ✅ Docker containerization
+- ✅ SSL/TLS with Let's Encrypt
+- ✅ Automatic health checks
+- ✅ Easy rollbacks
+- ✅ Full control on your VPS
+
+---
+
+## 📋 Prerequisites
+
+### 1. Local Machine Requirements
+
 ```bash
-# Ensure you're in the project root
+# Ruby (for Kamal gem)
+ruby --version  # Should be >= 3.0
+
+# Kamal installation
+gem install kamal
+
+# Verify installation
+kamal version
+```
+
+### 2. VPS Requirements
+
+- ✅ Ubuntu 20.04+ or Debian 11+
+- ✅ Minimum 1GB RAM (2GB recommended)
+- ✅ SSH access configured in `~/.ssh/config`
+- ✅ Sudo privileges
+- ✅ Docker will be installed by Kamal
+
+### 3. Domain & DNS
+
+```
+Type: A Record
+Name: koperasichain (or @)
+Value: YOUR_VPS_IP (e.g., 176.222.53.185)
+TTL: 300
+```
+
+**Verify DNS propagation:**
+```bash
+dig koperasichain.rectorspace.com +short
+# Should return your VPS IP
+```
+
+### 4. Docker Registry
+
+You need a Docker registry account (choose one):
+
+**Option A: Docker Hub** (Recommended for simplicity)
+- Sign up: https://hub.docker.com
+- Create access token: https://hub.docker.com/settings/security
+- Username: `rectorspace` (or your Docker Hub username)
+
+**Option B: GitHub Container Registry**
+- Token: https://github.com/settings/tokens
+- Permissions: `write:packages`, `read:packages`
+- Username: Your GitHub username
+
+---
+
+## 🚀 Initial Setup (First Time Only)
+
+### Step 1: Configure Secrets
+
+```bash
+# Navigate to project directory
 cd /Users/rz/local-dev/garuda-spark-blockchain/projects/koperasichain
 
-# Check git status
-git status
+# Copy secrets template
+cp .kamal/secrets-example .kamal/secrets
 
-# Add all changes
-git add .
-
-# Commit with descriptive message
-git commit -m "Epic 2 Complete: Voting system with proposal creation, voting UI, and execution"
-
-# Push to GitHub
-git push origin dev
+# Edit secrets file
+nano .kamal/secrets
+# or
+code .kamal/secrets
 ```
 
-### Step 2: Deploy to Vercel
+**Fill in your credentials:**
+```shell
+# Docker Hub authentication
+KAMAL_REGISTRY_PASSWORD=your_docker_hub_access_token_here
+```
 
-#### Option A: Vercel CLI (Recommended - Faster)
+**IMPORTANT:** Verify `.kamal/secrets` is in `.gitignore`:
 ```bash
-# Install Vercel CLI globally (if not already installed)
-npm install -g vercel
-
-# Navigate to app directory
-cd app
-
-# Login to Vercel
-vercel login
-
-# Deploy (first time)
-vercel
-
-# Follow prompts:
-# ? Set up and deploy "app"? → Y
-# ? Which scope? → Select your account
-# ? Link to existing project? → N
-# ? What's your project's name? → koperasichain
-# ? In which directory is your code located? → ./
-# ? Want to modify these settings? → N
-
-# Production deployment
-vercel --prod
+git check-ignore .kamal/secrets
+# Should output: .kamal/secrets
 ```
 
-#### Option B: Vercel Dashboard (Visual)
-1. Go to https://vercel.com
-2. Click "Add New Project"
-3. Import from GitHub:
-   - Repository: `garuda-spark-blockchain`
-   - Root Directory: `projects/koperasichain/app`
-4. Configure:
-   - **Framework Preset:** Next.js
-   - **Root Directory:** `projects/koperasichain/app`
-   - **Build Command:** `npm run build` (default)
-   - **Output Directory:** `.next` (default)
-5. Environment Variables: None needed (using public Devnet RPC)
-6. Click "Deploy"
+### Step 2: Update Deployment Configuration
 
-### Step 3: Verify Deployment
-After deployment completes:
-1. Visit the Vercel deployment URL (e.g., `https://koperasichain.vercel.app`)
-2. Run through **TESTING_GUIDE.md** on the live site
-3. Verify:
-   - ✅ Wallet connection works
-   - ✅ Devnet transactions work
-   - ✅ All pages load
-   - ✅ No console errors (F12)
+Edit `config/deploy.yml`:
 
----
-
-## 🔧 Configuration
-
-### Vercel Project Settings
-
-**Build & Development Settings:**
-- **Framework Preset:** Next.js
-- **Root Directory:** `projects/koperasichain/app`
-- **Build Command:** `npm run build`
-- **Output Directory:** `.next`
-- **Install Command:** `npm install`
-- **Development Command:** `npm run dev`
-
-### Environment Variables
-Currently using default public Devnet RPC (no env vars needed).
-
-**Future (for production Mainnet):**
-```
-NEXT_PUBLIC_RPC_ENDPOINT=https://api.mainnet-beta.solana.com
-NEXT_PUBLIC_NETWORK=mainnet-beta
-NEXT_PUBLIC_PROGRAM_ID=<mainnet-program-id>
-```
-
----
-
-## 🌐 Custom Domain (Optional)
-
-If you want to use `koperasichain.rectorspace.com`:
-
-### Step 1: Configure DNS (Cloudflare/Domain Provider)
-Add CNAME record:
-```
-Type: CNAME
-Name: koperasichain
-Target: cname.vercel-dns.com
-TTL: Auto
-```
-
-### Step 2: Add Domain in Vercel
-1. Go to Vercel Project → Settings → Domains
-2. Add domain: `koperasichain.rectorspace.com`
-3. Verify DNS propagation
-4. Wait for SSL certificate (automatic)
-
----
-
-## 📊 Performance Optimization
-
-### Lighthouse Scores Target:
-- Performance: >90
-- Accessibility: >90
-- Best Practices: >90
-- SEO: >80
-
-### Current Optimizations:
-- ✅ Next.js Image optimization
-- ✅ TailwindCSS purging unused styles
-- ✅ Code splitting (automatic with Next.js)
-- ✅ Static page generation where possible
-
-### Future Optimizations (if needed):
-- [ ] Enable Next.js Image with Vercel CDN
-- [ ] Add og:image metadata for sharing
-- [ ] Implement service worker (PWA)
-- [ ] Add analytics (Vercel Analytics)
-
----
-
-## 🔍 Monitoring & Analytics
-
-### Vercel Analytics (Built-in)
-Enable in Vercel Dashboard:
-1. Project Settings → Analytics → Enable
-2. View real-time metrics:
-   - Page views
-   - Unique visitors
-   - Performance scores
-   - Error rates
-
-### Error Tracking (Optional - Sentry)
 ```bash
-npm install @sentry/nextjs
-
-# Initialize
-npx @sentry/wizard -i nextjs
+nano config/deploy.yml
 ```
 
-**Environment Variables for Sentry:**
+**Update these values:**
+1. **Docker Registry** (line 10):
+   ```yaml
+   image: YOUR_DOCKERHUB_USERNAME/koperasichain
+   ```
+
+2. **Server Host** (line 25):
+   ```yaml
+   hosts:
+     - sanctum  # Your SSH config alias
+   ```
+
+3. **Domain** (line 50):
+   ```yaml
+   host: koperasichain.rectorspace.com
+   ```
+
+4. **Registry Username** (line 65):
+   ```yaml
+   username: YOUR_DOCKERHUB_USERNAME
+   ```
+
+### Step 3: Bootstrap VPS (Install Docker)
+
+**IMPORTANT:** Only run this ONCE per VPS!
+
+```bash
+# This installs Docker on your VPS
+kamal server bootstrap
+
+# Expected output:
+# Running docker installation on sanctum
+# ✅ Docker installed successfully
 ```
-NEXT_PUBLIC_SENTRY_DSN=<your-sentry-dsn>
-SENTRY_AUTH_TOKEN=<your-auth-token>
+
+**If your VPS already has Docker:**
+```bash
+# Skip bootstrap, just verify Docker is running
+ssh sanctum 'docker --version'
+```
+
+### Step 4: Initial Deployment
+
+```bash
+# First deployment - this will take 5-10 minutes
+kamal setup
+
+# Expected steps:
+# 1. Building Docker image (3-5 min)
+# 2. Pushing to registry (1-2 min)
+# 3. Deploying to VPS (1-2 min)
+# 4. Starting Traefik proxy
+# 5. Deploying application container
+# 6. Running health checks
+# 7. SSL certificate provisioning
 ```
 
 ---
 
-## 🚨 Troubleshooting Deployment Issues
+## 🔄 Regular Deployments (After Code Changes)
+
+### Standard Deployment
+
+```bash
+# Navigate to project
+cd /Users/rz/local-dev/garuda-spark-blockchain/projects/koperasichain
+
+# Deploy latest code
+kamal deploy
+
+# Process:
+# 1. Builds new Docker image
+# 2. Pushes to registry
+# 3. Pulls image on VPS
+# 4. Starts new container
+# 5. Health checks pass
+# 6. Switches traffic to new container
+# 7. Stops old container (kept for rollback)
+#
+# ⏱️ Duration: ~5 minutes
+# ⚡ Downtime: 0 seconds (zero-downtime!)
+```
+
+### Deploy with Custom Version Tag
+
+```bash
+# Tag with git SHA
+kamal deploy --version=$(git rev-parse --short HEAD)
+
+# Tag with custom version
+kamal deploy --version=v1.0.2
+```
+
+### Force Rebuild (Skip Cache)
+
+```bash
+# Useful when dependencies change
+kamal build push --no-cache
+kamal deploy
+```
+
+---
+
+## 🛠️ Common Operations
+
+### View Application Logs
+
+```bash
+# Tail logs (follow mode)
+kamal app logs --tail 100 --follow
+
+# Last 50 lines
+kamal app logs --tail 50
+
+# Search logs for errors
+kamal app logs --grep "error" --tail 200
+```
+
+### Check Container Status
+
+```bash
+# List running containers
+kamal app containers
+
+# Detailed container info
+kamal app containers -q
+```
+
+### Restart Application
+
+```bash
+# Restart without rebuilding
+kamal app restart
+```
+
+### Execute Commands in Container
+
+```bash
+# Open bash shell in container
+kamal app exec 'bash'
+
+# Run Node.js command
+kamal app exec 'node --version'
+
+# Check environment variables
+kamal app exec 'env'
+```
+
+### Check Health Status
+
+```bash
+# Traefik proxy status
+kamal proxy status
+
+# Application status
+kamal app status
+
+# Full deployment status
+kamal details
+```
+
+---
+
+## 🔙 Rollback (Emergency)
+
+If a deployment goes wrong:
+
+```bash
+# List available versions (shows last 3 by default)
+kamal app containers -q
+
+# Example output:
+# koperasichain-abc123 (current)
+# koperasichain-def456 (1 deployment ago)
+# koperasichain-ghi789 (2 deployments ago)
+
+# Rollback to previous version
+kamal rollback def456
+
+# ⏱️ Duration: ~30 seconds
+# ⚡ Uses cached container image (very fast!)
+```
+
+---
+
+## 🛡️ SSL/TLS Configuration
+
+Kamal automatically provisions SSL certificates via Let's Encrypt.
+
+### Verify SSL
+
+```bash
+# Check certificate status
+curl -I https://koperasichain.rectorspace.com
+
+# Expected header:
+# HTTP/2 200
+# server: Traefik
+```
+
+### SSL Troubleshooting
+
+If SSL fails to provision:
+
+```bash
+# Check Traefik logs
+kamal proxy logs
+
+# Common issues:
+# 1. DNS not propagated (wait 5-10 minutes)
+# 2. Port 443 blocked by firewall
+# 3. Let's Encrypt rate limit (5 certs/domain/week)
+```
+
+**Manual SSL verification:**
+```bash
+# Test Let's Encrypt challenge
+ssh sanctum
+curl http://koperasichain.rectorspace.com/.well-known/acme-challenge/test
+```
+
+---
+
+## 🚨 Troubleshooting
 
 ### Issue 1: Build Fails - "Module not found"
-**Cause:** Missing dependencies
-**Solution:**
-```bash
-cd app
-rm -rf node_modules package-lock.json
-npm install
-git add package-lock.json
-git commit -m "Update dependencies"
-git push
+
+**Symptom:**
+```
+ERROR: failed to solve: failed to compute cache key
 ```
 
-### Issue 2: Build Fails - TypeScript Errors
-**Cause:** Type errors in code
 **Solution:**
 ```bash
-cd app
-npm run build  # Test locally first
-# Fix any errors shown
+# Clear local build cache
+docker system prune -a
+
+# Rebuild from scratch
+kamal build push --no-cache
+kamal deploy
 ```
 
-### Issue 3: "This app is not available in your region"
-**Cause:** Wallet adapter issues with Solana network
-**Solution:** Ensure `NEXT_PUBLIC_RPC_ENDPOINT` uses public RPC (or leave unset for default)
+### Issue 2: Health Check Fails
 
-### Issue 4: Slow First Load
-**Cause:** Next.js cold start
+**Symptom:**
+```
+Error: Container failed health check
+```
+
+**Diagnosis:**
+```bash
+# Check app logs for errors
+kamal app logs --tail 100
+
+# Common causes:
+# 1. App crashed on startup
+# 2. Port 3000 not exposed
+# 3. /api/health endpoint missing
+# 4. Slow startup (increase readiness_delay)
+```
+
 **Solution:**
-- Enable Vercel Pro plan for faster cold starts
-- Use edge functions for critical paths
-- Implement loading states
+```yaml
+# In config/deploy.yml, increase delays:
+readiness_delay: 15  # Was 10
+deploy_timeout: 180  # Was 120
+```
 
-### Issue 5: 404 on Direct URL Access
-**Cause:** Next.js routing configuration
-**Solution:** Ensure `next.config.ts` has correct settings:
-```typescript
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone', // Remove this line for Vercel
+### Issue 3: Port Conflict on VPS
+
+**Symptom:**
+```
+Error: Port 443 already in use
+```
+
+**Solution 1: Use Custom Ports**
+
+Edit `config/deploy.yml`:
+```yaml
+proxy:
+  ssl: true
+  host: koperasichain.rectorspace.com
+  publish:
+    - "8080:80"
+    - "8443:443"
+```
+
+Access via: `https://koperasichain.rectorspace.com:8443`
+
+**Solution 2: Configure Existing Nginx as Frontend Proxy**
+
+On VPS, edit Nginx config:
+```nginx
+# /etc/nginx/sites-available/koperasichain
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name koperasichain.rectorspace.com;
+
+    # SSL config...
+
+    location / {
+        proxy_pass http://localhost:8080;  # Kamal on custom port
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
 }
 ```
 
+### Issue 4: SSH Connection Failed
+
+**Symptom:**
+```
+Error: SSH connection refused
+```
+
+**Solution:**
+```bash
+# Test SSH manually
+ssh sanctum
+
+# If fails, check ~/.ssh/config:
+cat ~/.ssh/config | grep -A 3 "Host sanctum"
+
+# Verify VPS firewall allows SSH (port 22)
+ssh sanctum 'sudo ufw status'
+```
+
+### Issue 5: Registry Authentication Failed
+
+**Symptom:**
+```
+Error: unauthorized: authentication required
+```
+
+**Solution:**
+```bash
+# Verify secrets file has correct token
+cat .kamal/secrets | grep KAMAL_REGISTRY_PASSWORD
+
+# Test Docker login manually
+docker login -u rectorspace
+
+# Regenerate Docker Hub token if needed:
+# https://hub.docker.com/settings/security
+```
+
 ---
 
-## 🔄 Continuous Deployment
+## 🔧 Advanced Configuration
 
-Vercel automatically deploys on:
-- **Push to `main`:** Production deployment
-- **Push to other branches:** Preview deployment
-- **Pull Requests:** Preview deployment with unique URL
+### Add PostgreSQL Database
 
-**Workflow:**
+Edit `config/deploy.yml`:
+
+```yaml
+accessories:
+  postgres:
+    image: postgres:16-alpine
+    host: sanctum
+    port: 5432
+    env:
+      secret:
+        - POSTGRES_PASSWORD
+      clear:
+        POSTGRES_USER: koperasichain
+        POSTGRES_DB: koperasichain_production
+    directories:
+      - data/postgres:/var/lib/postgresql/data
+```
+
+Add to `.kamal/secrets`:
+```shell
+POSTGRES_PASSWORD=your_secure_password_here
+```
+
+Deploy database:
 ```bash
-# Development
-git checkout dev
-# ... make changes ...
-git commit -m "Add feature X"
+kamal accessory boot postgres
+```
+
+### Add Redis Cache
+
+```yaml
+accessories:
+  redis:
+    image: redis:7-alpine
+    host: sanctum
+    port: 6379
+    directories:
+      - data/redis:/data
+```
+
+```bash
+kamal accessory boot redis
+```
+
+### Multi-Server Deployment
+
+```yaml
+servers:
+  web:
+    hosts:
+      - sanctum   # 176.222.53.185
+      - tester    # 185.70.184.150
+    labels:
+      traefik.http.routers.koperasichain.rule: Host(`koperasichain.rectorspace.com`)
+
+  workers:
+    hosts:
+      - sanctum
+    cmd: "node worker.js"
+    proxy: false  # Workers don't need HTTP proxy
+```
+
+---
+
+## 📊 Monitoring & Maintenance
+
+### View Resource Usage
+
+```bash
+# CPU, memory, disk on VPS
+ssh sanctum 'docker stats --no-stream'
+
+# Docker disk usage
+ssh sanctum 'docker system df'
+```
+
+### Clean Up Old Images
+
+```bash
+# Remove unused Docker images (reclaim disk space)
+kamal server prune
+
+# Aggressive cleanup (removes everything not running)
+ssh sanctum 'docker system prune -a --volumes'
+```
+
+### Update Kamal
+
+```bash
+# Update Kamal gem
+gem update kamal
+
+# Verify new version
+kamal version
+```
+
+---
+
+## 🎬 Deployment Workflow
+
+```bash
+# 1. Development: Make code changes
+cd /Users/rz/local-dev/garuda-spark-blockchain/projects/koperasichain
+# ... edit files ...
+
+# 2. Test locally
+cd app
+npm run build  # Ensure builds successfully
+npm run lint   # Check code quality
+
+# 3. Commit changes
+git add .
+git commit -m "Add new feature: X"
 git push origin dev
-# → Creates preview deployment
 
-# Production
-git checkout main
-git merge dev
-git push origin main
-# → Deploys to production
+# 4. Deploy to production
+kamal deploy
+
+# 5. Verify deployment
+curl -I https://koperasichain.rectorspace.com/api/health
+kamal app logs --tail 50
+
+# 6. If issues, rollback immediately
+# kamal rollback <previous_version>
 ```
-
----
-
-## 📱 Mobile App (Future - Optional)
-
-If you want a native mobile app later:
-
-### Option A: PWA (Progressive Web App)
-```bash
-npm install next-pwa
-```
-
-Add to `next.config.ts`:
-```typescript
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
-})
-
-module.exports = withPWA({
-  // existing config
-})
-```
-
-### Option B: React Native (Separate App)
-- Reuse smart contract interactions (`lib/anchor.ts`)
-- Use `@solana-mobile/mobile-wallet-adapter` for native wallets
-- Share business logic, rebuild UI with React Native
 
 ---
 
 ## ✅ Post-Deployment Checklist
 
-After deploying to Vercel:
+After deploying:
 
-### Functional Testing:
-- [ ] Homepage loads (no errors)
+### Functional Testing
+- [ ] Homepage loads: https://koperasichain.rectorspace.com
+- [ ] Health check returns 200: https://koperasichain.rectorspace.com/api/health
 - [ ] Wallet connection works (Phantom + Solflare)
 - [ ] Create cooperative works
-- [ ] Join cooperative works
-- [ ] Create proposal works
-- [ ] Voting works
-- [ ] Dashboard displays correctly
-- [ ] All navigation links work
-- [ ] Mobile view works (test on real phone)
-- [ ] Solana Explorer links work
-- [ ] No console errors (F12 → Console)
+- [ ] Voting system works
+- [ ] All navigation works
+- [ ] Mobile view responsive
 
-### Performance Testing:
-- [ ] Run Lighthouse audit (F12 → Lighthouse)
-- [ ] Performance score >90
+### Performance Testing
+- [ ] Lighthouse score >90: https://pagespeed.web.dev
 - [ ] First Contentful Paint <2s
 - [ ] Time to Interactive <4s
-- [ ] Mobile performance acceptable
+- [ ] Check logs for errors: `kamal app logs --grep "error"`
 
-### Security:
-- [ ] No API keys exposed in client code
-- [ ] HTTPS enabled (automatic with Vercel)
-- [ ] CSP headers configured (if needed)
-- [ ] No wallet private keys in code
+### Security
+- [ ] HTTPS enabled (SSL certificate active)
+- [ ] Security headers present: `curl -I https://koperasichain.rectorspace.com`
+- [ ] No secrets in code: `git grep -i "sk_live_"`
+- [ ] .kamal/secrets not committed: `git check-ignore .kamal/secrets`
 
-### SEO & Metadata:
-- [ ] Title tags are descriptive
-- [ ] Meta descriptions present
-- [ ] og:image for social sharing (optional)
-- [ ] Favicon displays correctly
+### Monitoring
+- [ ] Health checks passing: `kamal details`
+- [ ] Container running: `kamal app containers`
+- [ ] No errors in logs: `kamal app logs --tail 100`
 
 ---
 
 ## 📈 Scaling Considerations
 
-### Current Architecture (MVP):
-- Frontend: Vercel (serverless)
-- Smart Contract: Solana Devnet
-- No backend needed (blockchain is backend)
+### Vertical Scaling (Single Server)
 
-### Future Scaling (if needed):
-1. **Database for Indexing:**
-   - Add Supabase for fast queries
-   - Index proposals, votes off-chain
-   - Sync with blockchain events
+Upgrade VPS resources:
+- 1GB RAM → 2GB (handles more traffic)
+- 1 CPU → 2 CPU (faster response times)
 
-2. **RPC Infrastructure:**
-   - Use dedicated RPC (QuickNode, Helius)
-   - Implement RPC load balancing
-   - Add fallback RPC endpoints
+No configuration changes needed - Kamal uses all available resources.
 
-3. **Caching:**
-   - Redis for frequently accessed data
-   - CDN for static assets
-   - Service worker for offline support
+### Horizontal Scaling (Multiple Servers)
 
-4. **Mainnet Migration:**
-   - Deploy program to Mainnet
-   - Update `PROGRAM_ID` in `anchor.ts`
-   - Configure production RPC endpoint
-   - Test thoroughly before launch
+Add servers to `config/deploy.yml`:
 
----
+```yaml
+servers:
+  web:
+    hosts:
+      - sanctum    # Primary
+      - tester     # Secondary
+```
 
-## 🎯 Launch Checklist (Mainnet)
+Deploy:
+```bash
+kamal deploy
 
-When ready for real users:
-
-### Pre-Launch:
-- [ ] Smart contract audited (by Otter Security, Sec3, etc.)
-- [ ] All tests passing (100% coverage)
-- [ ] Mainnet program deployed
-- [ ] Frontend updated with Mainnet program ID
-- [ ] Legal review (if needed for Indonesia)
-- [ ] User documentation complete
-- [ ] Support channels ready (Telegram, Discord)
-
-### Launch:
-- [ ] Announce on Twitter/X
-- [ ] Post in Solana Discord/Reddit
-- [ ] Submit to Solana dApp list
-- [ ] Create demo video
-- [ ] Write Medium article
-
-### Post-Launch:
-- [ ] Monitor errors (Sentry)
-- [ ] Track usage (Vercel Analytics)
-- [ ] Collect user feedback
-- [ ] Iterate based on feedback
+# Traffic automatically load-balanced across both servers
+```
 
 ---
 
-## 🆘 Support & Resources
+## 🆘 Emergency Procedures
 
-**Vercel Docs:** https://vercel.com/docs
-**Next.js Docs:** https://nextjs.org/docs
-**Solana Docs:** https://docs.solana.com
-**Wallet Adapter:** https://github.com/solana-labs/wallet-adapter
+### Complete Service Outage
 
-**Need Help?**
-- Vercel Status: https://vercel-status.com
-- Community: https://github.com/vercel/next.js/discussions
+```bash
+# 1. Check container status
+kamal app containers
+
+# 2. Check logs for crash
+kamal app logs --tail 200
+
+# 3. Restart application
+kamal app restart
+
+# 4. If restart fails, redeploy last known good version
+kamal rollback <version>
+
+# 5. If all else fails, SSH and debug manually
+ssh sanctum
+docker ps -a
+docker logs koperasichain
+```
+
+### Database Corruption
+
+```bash
+# 1. Stop application
+kamal app stop
+
+# 2. Backup database
+ssh sanctum 'docker exec postgres pg_dump -U koperasichain > backup.sql'
+
+# 3. Restore from backup
+# (Restore procedures depend on your backup strategy)
+
+# 4. Restart application
+kamal app start
+```
 
 ---
 
-**Deployment Time:** ~5-10 minutes (first time)
-**Redeploy Time:** ~2-3 minutes (subsequent)
+## 📚 Resources
 
-**Bismillah, may the deployment be smooth and successful! InshaAllah, this will reach thousands of Indonesian cooperative members!** 🚀🇮🇩
+**Official Documentation:**
+- Kamal: https://kamal-deploy.org
+- Context7: https://context7.com/basecamp/kamal-site
+- Docker: https://docs.docker.com
+- Traefik: https://doc.traefik.io/traefik
+
+**Community Support:**
+- Kamal Discord: https://discord.gg/YgHVT7GCXS
+- Basecamp (Kamal creators): https://github.com/basecamp/kamal
+
+**Your Infrastructure:**
+- Docker Hub: https://hub.docker.com/u/rectorspace
+- VPS SSH Config: `~/.ssh/config`
+- Domain DNS: rectorspace.com registrar
+
+---
+
+## 🎯 Quick Command Reference
+
+```bash
+# Setup & Deploy
+kamal setup              # First-time setup
+kamal deploy             # Deploy new version
+kamal rollback <version> # Rollback to previous
+
+# Monitoring
+kamal app logs           # View logs
+kamal app containers     # List containers
+kamal details            # Full status
+
+# Management
+kamal app restart        # Restart app
+kamal app stop           # Stop app
+kamal app start          # Start app
+kamal server prune       # Clean old images
+
+# Troubleshooting
+kamal app exec 'bash'    # SSH into container
+kamal proxy logs         # View proxy logs
+kamal accessory logs postgres  # Database logs
+```
+
+---
+
+**Deployment Time:**
+- First setup: ~10-15 minutes
+- Regular deploys: ~5 minutes
+- Rollbacks: ~30 seconds
+
+**Alhamdulillah, may your deployments be smooth and successful! 🚀**
+
+Bismillah - zero-downtime deployments with full control on your VPS!

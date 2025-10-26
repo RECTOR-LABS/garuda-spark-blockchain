@@ -1,0 +1,37 @@
+# ═══════════════════════════════════════════════════
+# .dockerignore - Exclude unnecessary files from Docker context
+# ═══════════════════════════════════════════════════
+
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js
+.next
+out
+
+# Testing
+coverage
+
+# Misc
+.git
+.gitignore
+README.md
+.vscode
+.idea
+
+# Environment (secrets managed by Kamal)
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kamal
+.kamal
+
+# Vercel (no longer used)
+.vercel

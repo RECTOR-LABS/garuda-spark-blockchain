@@ -1,0 +1,38 @@
+#!/bin/bash
+# ═══════════════════════════════════════════════════
+# Pre-Deploy Hook - KoperasiChain
+# ═══════════════════════════════════════════════════
+# Context7: https://context7.com/basecamp/kamal-site
+# Pattern: Validation before deployment
+# ═══════════════════════════════════════════════════
+# This hook runs BEFORE deployment starts
+# Useful for: tests, linting, safety checks
+# ═══════════════════════════════════════════════════
+
+set -e  # Exit on any error
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🚀 Pre-Deploy: KoperasiChain"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📦 Version: $KAMAL_VERSION"
+echo "🖥️  Targets: $KAMAL_HOSTS"
+echo "⏰ Time: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Optional: Run linting
+# echo "🔍 Running linter..."
+# cd app && npm run lint
+
+# Optional: Run tests
+# echo "🧪 Running tests..."
+# cd app && npm run test
+
+# Optional: Check for secrets in code
+echo "🔐 Checking for exposed secrets..."
+if grep -r "sk_live_" app/ 2>/dev/null; then
+  echo "❌ ERROR: Found potential secret keys in code!"
+  exit 1
+fi
+
+echo "✅ Pre-deploy checks passed!"
+echo ""

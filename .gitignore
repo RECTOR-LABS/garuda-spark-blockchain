@@ -45,3 +45,8 @@ test-ledger/
 # Misc
 *.pem
 .vercel
+
+# Kamal deployment secrets (NEVER COMMIT!)
+.kamal/secrets
+.kamal/secrets-*
+!.kamal/secrets-example

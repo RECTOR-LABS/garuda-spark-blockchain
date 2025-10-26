@@ -16,6 +16,20 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "KoperasiChain - Digital Cooperative Platform",
   description: "Blockchain-powered cooperative management for Indonesian MSMEs",
+  metadataBase: new URL("https://koperasichain.rectorspace.com"),
+  openGraph: {
+    title: "KoperasiChain - Digital Cooperative Platform",
+    description: "Blockchain-powered cooperative management for Indonesian MSMEs",
+    url: "https://koperasichain.rectorspace.com",
+    siteName: "KoperasiChain",
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KoperasiChain - Digital Cooperative Platform",
+    description: "Blockchain-powered cooperative management for Indonesian MSMEs",
+  },
 };
 
 export default function RootLayout({

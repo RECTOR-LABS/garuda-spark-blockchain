@@ -1,0 +1,46 @@
+#!/bin/bash
+# ═══════════════════════════════════════════════════
+# Post-Deploy Hook - KoperasiChain
+# ═══════════════════════════════════════════════════
+# Context7: https://context7.com/basecamp/kamal-site
+# Pattern: Verification and notification after deployment
+# ═══════════════════════════════════════════════════
+# This hook runs AFTER deployment completes successfully
+# Useful for: smoke tests, notifications, monitoring
+# ═══════════════════════════════════════════════════
+
+set -e
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ Post-Deploy: KoperasiChain"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📦 Version: $KAMAL_VERSION deployed successfully!"
+echo "🌐 URL: https://koperasichain.rectorspace.com"
+echo "⏰ Completed: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Optional: Run smoke tests
+echo "🔥 Running smoke tests..."
+if curl -f -s https://koperasichain.rectorspace.com/api/health > /dev/null; then
+  echo "✅ Health check passed!"
+else
+  echo "⚠️  Health check failed - verify manually"
+fi
+
+# Optional: Send Telegram notification
+# TELEGRAM_BOT_TOKEN="your_bot_token"
+# TELEGRAM_CHAT_ID="your_chat_id"
+# MESSAGE="🚀 KoperasiChain deployed successfully! Version: $KAMAL_VERSION"
+# curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+#   -d chat_id="$TELEGRAM_CHAT_ID" \
+#   -d text="$MESSAGE" > /dev/null
+
+# Optional: Send Slack notification
+# SLACK_WEBHOOK_URL="https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+# curl -X POST "$SLACK_WEBHOOK_URL" \
+#   -H 'Content-Type: application/json' \
+#   -d "{\"text\":\"✅ KoperasiChain deployed! Version: $KAMAL_VERSION\"}"
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Alhamdulillah, deployment successful! 🎉"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

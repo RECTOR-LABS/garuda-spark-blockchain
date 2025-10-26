@@ -26,10 +26,10 @@ Blockchain-powered digital cooperative platform enabling:
 
 - **Blockchain**: Solana (Devnet → Mainnet-ready)
 - **Smart Contracts**: Anchor Framework (Rust)
-- **Frontend**: Next.js 14 + TypeScript + TailwindCSS
+- **Frontend**: Next.js 15.5.4 + TypeScript + TailwindCSS
 - **Wallet**: Solana Wallet Adapter
-- **Database**: Supabase (PostgreSQL)
-- **Deployment**: Vercel (frontend), Solana Devnet (contracts)
+- **Database**: Supabase (PostgreSQL) or PostgreSQL (Docker)
+- **Deployment**: Kamal (Docker + VPS), Solana Devnet (contracts)
 
 ## Core Features (MVP - 23 Days)
 
@@ -144,7 +144,7 @@ npm run dev:all    # Run frontend + watch smart contracts
 
 ## Links
 
-- **Live Demo**: http://localhost:3001 (dev server) | TBD (Vercel deployment pending)
+- **Live Demo**: http://localhost:3001 (dev) | https://koperasichain.rectorspace.com (production via Kamal)
 - **Solana Explorer**: https://explorer.solana.com/address/RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za?cluster=devnet
 - **Program ID**: `RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za` (Devnet)
 - **Documentation**: See TESTING_GUIDE.md, DEPLOYMENT_GUIDE.md, EPIC2_COMPLETION_SUMMARY.md

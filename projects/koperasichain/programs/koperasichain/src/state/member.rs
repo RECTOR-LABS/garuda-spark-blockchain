@@ -1,5 +1,21 @@
 use anchor_lang::prelude::*;
 
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq, Debug, InitSpace)]
+pub enum MemberRole {
+    /// Regular member (can vote, create proposals, deposit)
+    Member,
+    /// Administrator (all permissions + manage members, execute proposals)
+    Admin,
+    /// Moderator (can manage proposals, moderate discussions)
+    Moderator,
+}
+
+impl Default for MemberRole {
+    fn default() -> Self {
+        MemberRole::Member
+    }
+}
+
 #[account]
 #[derive(InitSpace)]
 pub struct Member {
@@ -8,6 +24,12 @@ pub struct Member {
 
     /// Member's wallet address
     pub wallet: Pubkey,
+
+    /// Member's role (Admin, Member, Moderator)
+    pub role: MemberRole,
+
+    /// Reputation score (increases with participation)
+    pub reputation_score: u32,
 
     /// Unix timestamp when member joined
     pub joined_at: i64,

@@ -46,4 +46,22 @@ pub enum ErrorCode {
 
     #[msg("Voting period has not ended yet")]
     VotingPeriodNotEnded,
+
+    #[msg("Deposit amount must be greater than 0")]
+    InvalidDepositAmount,
+
+    #[msg("Insufficient treasury balance")]
+    InsufficientBalance,
+
+    #[msg("Withdrawal amount must be greater than 0")]
+    InvalidWithdrawalAmount,
+
+    #[msg("Insufficient available balance (some funds are allocated)")]
+    InsufficientAvailableBalance,
+
+    #[msg("Distribution amount must be greater than 0")]
+    InvalidDistributionAmount,
+
+    #[msg("No members to distribute to")]
+    NoMembersToDistribute,
 }

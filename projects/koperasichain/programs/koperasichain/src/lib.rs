@@ -49,4 +49,24 @@ pub mod koperasichain {
     pub fn execute_proposal(ctx: Context<ExecuteProposal>) -> Result<()> {
         instructions::execute_proposal::execute_proposal(ctx)
     }
+
+    pub fn deposit_funds(ctx: Context<DepositFunds>, amount: u64) -> Result<()> {
+        instructions::deposit_funds::deposit_funds(ctx, amount)
+    }
+
+    pub fn withdraw_funds(ctx: Context<WithdrawFunds>, amount: u64) -> Result<()> {
+        instructions::withdraw_funds::withdraw_funds(ctx, amount)
+    }
+
+    pub fn distribute_dividends(ctx: Context<DistributeDividends>, total_amount: u64) -> Result<()> {
+        instructions::distribute_dividends::distribute_dividends(ctx, total_amount)
+    }
+
+    pub fn update_member_role(ctx: Context<UpdateMemberRole>, new_role: state::MemberRole) -> Result<()> {
+        instructions::update_member_role::update_member_role(ctx, new_role)
+    }
+
+    pub fn increment_reputation(ctx: Context<IncrementReputation>, points: u32) -> Result<()> {
+        instructions::increment_reputation::increment_reputation(ctx, points)
+    }
 }

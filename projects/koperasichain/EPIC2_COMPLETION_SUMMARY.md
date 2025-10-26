@@ -267,15 +267,15 @@ Every vote **immediately updates** the progress bars. Members can see democracy 
    - Follow Test Flow 2 (Edge Cases)
    - Document any bugs found
 
-2. **Deploy to Vercel** (10 minutes)
+2. **Deploy with Kamal** (15 minutes)
    - Open `DEPLOYMENT_GUIDE.md`
    - Follow Step 1 (Git push)
-   - Follow Step 2 (Vercel deploy)
+   - Follow Step 2 (Kamal deploy)
    - Test on live URL
 
 3. **Share & Demo** (15 minutes)
    - Create 3-minute screen recording
-   - Share Vercel URL with team
+   - Share production URL with team
    - Collect feedback
 
 ### Future (Epic 3 - Treasury):
@@ -368,18 +368,18 @@ Every vote **immediately updates** the progress bars. Members can see democracy 
 - Cost: $0 (Devnet testing)
 
 **Deployment:**
-- Vercel: $0 (Hobby plan)
+- VPS (Kamal): $5-10/month (basic tier)
 - Solana Devnet: $0 (test network)
 
 **Operations (if Mainnet):**
 - Smart contract deployment: ~0.5 SOL ($50)
 - Per transaction: <$0.001
-- Hosting: $0 (Vercel free tier)
+- Hosting: $5-10/month (VPS)
 
 **Scaling (1,000 cooperatives, 10,000 votes/month):**
 - Transaction costs: ~$10/month
-- Hosting: Still free (Vercel)
-- Total: **~$10/month** (incredibly affordable!)
+- Hosting: $10-20/month (upgraded VPS)
+- Total: **~$20-30/month** (still very affordable!)
 
 ---
 
@@ -411,7 +411,7 @@ Every vote **immediately updates** the progress bars. Members can see democracy 
 - Solana: Fast, affordable blockchain
 - Anchor Framework: Developer-friendly smart contracts
 - Next.js: Modern React framework
-- Vercel: Seamless deployments
+- Kamal: Docker-based deployments
 - TailwindCSS: Rapid UI development
 
 **Inspiration:**

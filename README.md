@@ -57,9 +57,9 @@ Blockchain-powered digital cooperative platform enabling:
 - Solana Wallet Adapter
 
 **Infrastructure**:
-- Database: Supabase (PostgreSQL)
-- Hosting: Vercel (frontend), Solana Devnet (contracts)
-- CI/CD: GitHub Actions + Vercel auto-deploy
+- Database: Local PostgreSQL
+- Hosting: Kamal deployment (Docker + VPS), Solana Devnet (contracts)
+- CI/CD: GitHub Actions + Kamal deployment
 
 **Mobile**:
 - Progressive Web App (PWA)
@@ -121,8 +121,8 @@ garuda-spark-blockchain/
 **Roles**:
 - **Blockchain Leads (2-3 devs)**: Anchor smart contracts, Solana integration
 - **Frontend Leads (3-4 devs)**: Next.js app, UI/UX, wallet integration, PWA
-- **Full-Stack (2-3 devs)**: API routes, Supabase, off-chain data sync
-- **DevOps/QA (2 devs)**: Testing, deployment, CI/CD, performance optimization
+- **Full-Stack (2-3 devs)**: API routes, PostgreSQL, off-chain data sync
+- **DevOps/QA (2 devs)**: Testing, Kamal deployment, CI/CD, performance optimization
 - **Product/Design (1-2 devs)**: User research, wireframes, demo production
 
 📋 [See Detailed Team Allocation](./docs/TEAM_ALLOCATION.md)
@@ -274,7 +274,7 @@ npm run build
 ✅ Working MVP with complete user journey
 ✅ <3 second load time, mobile-optimized
 ✅ Clean GitHub repo, active commit history
-✅ Fast, reliable deployment
+✅ Fast, reliable Kamal deployment
 
 **Strategy**: Ship polished, bug-free MVP. Most teams fail here.
 

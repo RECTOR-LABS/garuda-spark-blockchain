@@ -22,6 +22,8 @@ interface CooperativeData {
 interface MemberData {
   address: string;
   wallet: string;
+  role: 'Admin' | 'Member' | 'Moderator';
+  reputationScore: number;
   joinedAt: number;
   isActive: boolean;
 }
@@ -81,12 +83,27 @@ export default function CooperativeDashboard() {
           },
         ]);
 
-        const memberData: MemberData[] = allMembers.map((member) => ({
-          address: member.publicKey.toBase58(),
-          wallet: member.account.wallet.toBase58(),
-          joinedAt: member.account.joinedAt.toNumber(),
-          isActive: member.account.isActive,
-        }));
+        const memberData: MemberData[] = allMembers.map((member) => {
+          const role = member.account.role;
+          let roleStr: 'Admin' | 'Member' | 'Moderator' = 'Member';
+
+          if (role.admin !== undefined) {
+            roleStr = 'Admin';
+          } else if (role.moderator !== undefined) {
+            roleStr = 'Moderator';
+          } else if (role.member !== undefined) {
+            roleStr = 'Member';
+          }
+
+          return {
+            address: member.publicKey.toBase58(),
+            wallet: member.account.wallet.toBase58(),
+            role: roleStr,
+            reputationScore: member.account.reputationScore,
+            joinedAt: member.account.joinedAt.toNumber(),
+            isActive: member.account.isActive,
+          };
+        });
 
         setMembers(memberData);
         setLoading(false);
@@ -157,7 +174,16 @@ export default function CooperativeDashboard() {
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{cooperative.name}</h2>
-              <p className="text-gray-600">{cooperative.description}</p>
+              <p className="text-gray-600 mb-3">{cooperative.description}</p>
+              <Link
+                href={`/dashboard/${cooperativeAddress}/leaderboard`}
+                className="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+              >
+                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                View Leaderboard →
+              </Link>
             </div>
             {isAuthority && (
               <span className="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm font-semibold rounded-full">
@@ -213,7 +239,7 @@ export default function CooperativeDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Link
             href={`/dashboard/${cooperativeAddress}/proposals`}
             className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
@@ -237,13 +263,19 @@ export default function CooperativeDashboard() {
             </div>
           </Link>
 
-          <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-8 group">
+          <Link
+            href={`/dashboard/${cooperativeAddress}/treasury`}
+            className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-2">Treasury</h3>
-                <p className="text-green-100 mb-4">Manage cooperative funds (Coming Soon)</p>
-                <span className="inline-flex items-center text-white font-semibold opacity-50">
-                  Coming Soon
+                <p className="text-green-100 mb-4">Manage cooperative funds and dividends</p>
+                <span className="inline-flex items-center text-white font-semibold group-hover:gap-2 transition-all">
+                  Manage Treasury
+                  <svg className="w-5 h-5 ml-1 group-hover:ml-2 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
                 </span>
               </div>
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
@@ -252,7 +284,30 @@ export default function CooperativeDashboard() {
                 </svg>
               </div>
             </div>
-          </div>
+          </Link>
+
+          <Link
+            href={`/dashboard/${cooperativeAddress}/members`}
+            className="bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow group"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-2">Members</h3>
+                <p className="text-orange-100 mb-4">Manage roles and reputation</p>
+                <span className="inline-flex items-center text-white font-semibold group-hover:gap-2 transition-all">
+                  View Members
+                  <svg className="w-5 h-5 ml-1 group-hover:ml-2 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+              </div>
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Invite Section */}
@@ -306,20 +361,23 @@ export default function CooperativeDashboard() {
                     Wallet Address
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Role
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Reputation
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Joined Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Role
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {members.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
                       No members yet. Share the invite link to add members.
                     </td>
                   </tr>
@@ -349,6 +407,25 @@ export default function CooperativeDashboard() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          member.role === 'Admin'
+                            ? 'bg-indigo-100 text-indigo-800'
+                            : member.role === 'Moderator'
+                            ? 'bg-purple-100 text-purple-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {member.role}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <svg className="w-4 h-4 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <span className="text-sm font-semibold text-gray-900">{member.reputationScore}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <p className="text-sm text-gray-900">
                           {new Date(member.joinedAt * 1000).toLocaleDateString('en-US', {
                             year: 'numeric',
@@ -372,15 +449,6 @@ export default function CooperativeDashboard() {
                           <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                             Inactive
                           </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {member.wallet === cooperative.authority ? (
-                          <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                            Authority
-                          </span>
-                        ) : (
-                          <span className="text-sm text-gray-500">Member</span>
                         )}
                       </td>
                     </tr>

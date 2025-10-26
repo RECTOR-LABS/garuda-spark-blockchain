@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use crate::state::{Cooperative, Member};
+use crate::state::{Cooperative, Member, MemberRole};
 use crate::errors::ErrorCode;
 
 /// Add a member to an existing cooperative
@@ -13,6 +13,8 @@ pub fn add_member(
     // Initialize member account
     member.cooperative = cooperative.key();
     member.wallet = ctx.accounts.member_wallet.key();
+    member.role = MemberRole::Member; // New members are regular members by default
+    member.reputation_score = 0; // Start with 0 reputation
     member.joined_at = clock.unix_timestamp;
     member.is_active = true;
     member.bump = ctx.bumps.member;

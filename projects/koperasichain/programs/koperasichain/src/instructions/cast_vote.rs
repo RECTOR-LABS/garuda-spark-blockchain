@@ -64,6 +64,11 @@ pub fn cast_vote(
         }
     }
 
+    // Increment voter's reputation (gamification)
+    let member = &mut ctx.accounts.member;
+    member.reputation_score = member.reputation_score.saturating_add(10); // 10 points per vote
+    msg!("Voter reputation increased to: {}", member.reputation_score);
+
     Ok(())
 }
 

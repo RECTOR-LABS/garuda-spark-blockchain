@@ -194,10 +194,10 @@
 - **Wallet Integration**: @solana/wallet-adapter-react
 
 **Backend & Infrastructure**:
-- **Database**: Supabase (PostgreSQL)
+- **Database**: Local PostgreSQL
 - **API**: Next.js API Routes
-- **Hosting**: Vercel (frontend), Solana Devnet (contracts)
-- **CI/CD**: GitHub Actions + Vercel auto-deploy
+- **Hosting**: Kamal deployment (Docker + VPS), Solana Devnet (contracts)
+- **CI/CD**: GitHub Actions + Kamal deployment
 
 **Mobile Strategy**:
 - Progressive Web App (PWA) - single codebase, instant updates
@@ -602,19 +602,19 @@
 #### **STORY-5.1**: As a developer, I want automated deployment for frontend and smart contracts.
 
 **Acceptance Criteria**:
-- GitHub push triggers Vercel deployment automatically
+- GitHub push triggers Kamal deployment automatically
 - Smart contract tests run on CI/CD pipeline
 - Deployment status visible in GitHub
 - Rollback capability if deployment fails
 
 **Tasks**:
-- **TASK-5.1.1**: Set up Vercel project linked to GitHub repo (1 hour)
-- **TASK-5.1.2**: Configure environment variables on Vercel (1 hour)
+- **TASK-5.1.1**: Set up Kamal configuration for Docker deployment (2 hours)
+- **TASK-5.1.2**: Configure environment variables in Kamal secrets (1 hour)
 - **TASK-5.1.3**: Set up GitHub Actions for Anchor tests (2 hours)
 - **TASK-5.1.4**: Add deployment status badge to README (0.5 hour)
 - **TASK-5.1.5**: Test CI/CD pipeline (1 hour)
 
-**Total Effort**: ~5.5 hours (~1 developer-day)
+**Total Effort**: ~6.5 hours (~1 developer-day)
 
 ---
 
@@ -622,13 +622,13 @@
 
 **Acceptance Criteria**:
 - Errors are logged to Sentry automatically
-- Performance metrics tracked (Vercel Analytics)
+- Performance metrics tracked via custom analytics
 - Alerts for critical errors
 - Dashboard for monitoring uptime
 
 **Tasks**:
 - **TASK-5.2.1**: Integrate Sentry for error tracking (2 hours)
-- **TASK-5.2.2**: Set up Vercel Analytics (1 hour)
+- **TASK-5.2.2**: Set up performance monitoring (1 hour)
 - **TASK-5.2.3**: Configure alerts for critical errors (1 hour)
 - **TASK-5.2.4**: Test error tracking (1 hour)
 

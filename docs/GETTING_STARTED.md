@@ -135,8 +135,8 @@ npm install && npm run build
 - [ ] Solana documentation (docs.solana.com)
 - [ ] Anchor Framework guide (anchor-lang.com)
 - [ ] Solana Wallet Adapter examples
-- [ ] Supabase PostgreSQL setup
-- [ ] Vercel deployment guides
+- [ ] PostgreSQL setup and configuration
+- [ ] Kamal deployment documentation
 
 ## Submission Requirements Checklist
 

@@ -343,8 +343,8 @@ If you find bugs during testing, document them as follows:
 Once all tests pass:
 1. ✅ Document any bugs found (if any)
 2. ✅ Fix critical/high bugs
-3. ✅ Deploy to Vercel (see DEPLOYMENT_GUIDE.md)
-4. ✅ Test deployed version on Vercel URL
+3. ✅ Deploy with Kamal (see DEPLOYMENT_GUIDE.md)
+4. ✅ Test deployed version on production URL
 5. ✅ Share with team/judges
 
 ---

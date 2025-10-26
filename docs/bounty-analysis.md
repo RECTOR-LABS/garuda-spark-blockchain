@@ -541,7 +541,7 @@ Build **"LindungiAnak"** - Safe Browsing & Reporting Platform:
 - Test extensively (no broken buttons or errors in demo)
 - Ensure fast loading and responsive design
 - Provide test accounts/credentials for judges
-- Deploy on reliable hosting (Vercel, Netlify, AWS)
+- Deploy on reliable hosting (Kamal deployment to VPS, AWS)
 
 **Blockchain Integration**:
 - Use Solana effectively (speed, low cost are key selling points)
@@ -565,9 +565,9 @@ Smart Contracts: Anchor Framework (Rust)
 Frontend: Next.js 14 (React), TailwindCSS
 Wallet: Solana Wallet Adapter
 Backend: Next.js API routes or Cloudflare Workers
-Database: Supabase (PostgreSQL), Firebase
+Database: Local PostgreSQL
 Mobile: React Native or PWA (Progressive Web App)
-Deployment: Vercel (frontend), AWS/GCP (backend)
+Deployment: Kamal deployment (Docker + VPS)
 ```
 
 **Architecture Best Practices**:
@@ -828,7 +828,7 @@ Why:
 - Server-side rendering (faster initial load)
 - API routes (backend + frontend in one repo)
 - Excellent developer experience
-- Vercel deployment (1-click)
+- Kamal deployment (Docker-based, production-ready)
 
 Styling: TailwindCSS v3
 - Rapid UI development
@@ -866,12 +866,12 @@ Cons:
 
 #### Backend Services
 ```
-Database: Supabase (PostgreSQL)
-- Real-time subscriptions
-- Row-level security
-- Built-in auth
-- Generous free tier
-- Fast setup
+Database: Local PostgreSQL
+- Full control over data
+- Production-ready performance
+- Can be extended with PostGIS for location features
+- Cost-effective for VPS deployment
+- Standard SQL compatibility
 
 Alternative: Firebase
 - Real-time database
@@ -889,17 +889,17 @@ API Layer: Next.js API Routes
 #### Infrastructure & DevOps
 ```
 Hosting:
-- Frontend: Vercel (Next.js optimized, free tier)
+- Frontend & Backend: Kamal deployment (Docker + VPS)
 - Smart Contracts: Solana Devnet/Mainnet
-- Database: Supabase Cloud or Firebase
+- Database: PostgreSQL on VPS
 
 CI/CD:
 - GitHub Actions for automated testing
-- Vercel automatic deployments on push
+- Kamal automatic deployments via GitHub Actions
 - Anchor testing in GitHub workflows
 
 Monitoring:
-- Vercel Analytics (web vitals)
+- Performance monitoring tools
 - Sentry (error tracking)
 - Solana Explorer (on-chain transactions)
 ```
@@ -949,7 +949,7 @@ Design:
                     │                      │
                     ▼                      ▼
 ┌─────────────────────────────┐  ┌──────────────────────────┐
-│   SOLANA BLOCKCHAIN         │  │   SUPABASE (Database)    │
+│   SOLANA BLOCKCHAIN         │  │   PostgreSQL (Database)  │
 │                             │  │                          │
 │  Anchor Programs:           │  │  Tables:                 │
 │  - Cooperative Registry     │  │  - users                 │
@@ -957,9 +957,9 @@ Design:
 │  - Treasury Management      │  │  - transactions_log      │
 │  - Token Distribution       │  │  - notifications         │
 │                             │  │                          │
-│  SPL Tokens:                │  │  Real-time:              │
-│  - Cooperative Shares       │  │  - WebSocket updates     │
-│  - Dividend Tokens          │  │  - Subscription triggers │
+│  SPL Tokens:                │  │  Features:               │
+│  - Cooperative Shares       │  │  - Full SQL support      │
+│  - Dividend Tokens          │  │  - ACID compliance       │
 └─────────────────────────────┘  └──────────────────────────┘
 ```
 
@@ -1454,7 +1454,7 @@ WON'T HAVE (Post-hackathon):
 - Detection: Week 2 technical spike should reveal major issues early
 
 **Risk: Deployment Failures**
-- Mitigation: Deploy early and often, use reliable platforms (Vercel)
+- Mitigation: Deploy early and often, use reliable platforms (Kamal + VPS)
 - Contingency: Have backup demo video showing all functionality
 - Detection: Continuous deployment testing from Week 3 onwards
 

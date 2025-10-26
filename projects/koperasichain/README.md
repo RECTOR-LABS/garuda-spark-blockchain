@@ -120,7 +120,7 @@ koperasichain/
 ├── tests/
 │   └── koperasichain.ts                     # ✅ 12 tests (5 passing)
 ├── TESTING_GUIDE.md                         # ✅ Epic 2 testing flows
-├── DEPLOYMENT_GUIDE.md                      # ✅ Vercel deployment
+├── DEPLOYMENT_GUIDE.md                      # ✅ Kamal deployment
 ├── EPIC2_COMPLETION_SUMMARY.md              # ✅ Complete overview
 └── README.md
 ```

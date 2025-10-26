@@ -67,13 +67,13 @@
 
 **Responsibilities**:
 - Next.js API routes for off-chain data
-- Supabase database schema and queries
+- PostgreSQL database schema and queries
 - User authentication (wallet-based)
 - WhatsApp integration (optional enhancement)
 - Data synchronization (on-chain ↔ off-chain)
 
 **Key Deliverables**:
-- Supabase schema for user profiles, metadata
+- PostgreSQL schema for user profiles, metadata
 - API endpoints for cooperative data
 - Off-chain voting metadata storage
 - Member notification system
@@ -86,7 +86,7 @@
 
 **Responsibilities**:
 - GitHub Actions CI/CD pipeline
-- Vercel deployment automation
+- Kamal deployment automation (Docker + VPS)
 - Smart contract deployment scripts
 - Cross-browser testing (Chrome, Safari, Firefox)
 - Mobile device testing (Android, iOS)
@@ -190,7 +190,7 @@
 
 **Scripts**:
 - Anchor build + deploy automation
-- Frontend deployment to Vercel
+- Frontend/backend deployment with Kamal (Docker + VPS)
 - Environment variable templates
 - Health check endpoints
 - Backup and rollback procedures
@@ -356,7 +356,7 @@
 |------|-----------|---------------|------------------|
 | **Blockchain Devs** | 2-3 | Smart contracts, Anchor | Cooperative, voting, treasury contracts |
 | **Frontend Devs** | 3-4 | Next.js PWA, UI/UX | Wallet integration, voting dashboard, mobile PWA |
-| **Full-stack Devs** | 2-3 | API, database, integrations | Supabase schema, API routes, data sync |
+| **Full-stack Devs** | 2-3 | API, database, integrations | PostgreSQL schema, API routes, data sync |
 | **DevOps/QA** | 2 | CI/CD, testing, deployment | Automated pipeline, test coverage, security audit |
 | **Product/Design** | 1-2 | Research, wireframes, demo | User insights, 3-min video, pitch deck |
 | **TOTAL** | **10-14** | **Unified Excellence** | **1st Place KoperasiChain** |

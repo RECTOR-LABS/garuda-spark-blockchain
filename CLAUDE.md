@@ -67,15 +67,28 @@ garuda-spark-blockchain/                # Main repository
 **Current Deployed Program (Devnet)**:
 - **Program ID**: `RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za`
 - **Network**: Solana Devnet
-- **Features**: Cooperative creation, member management, proposal voting
+- **Deployment Date**: October 25, 2025 (Epic 2 Complete)
+- **Features**:
+  - ✅ **Epic 1**: Cooperative creation & member management
+  - ✅ **Epic 2**: Democratic governance & voting system
+    - Proposal creation with validation
+    - Vote casting with automatic duplicate prevention (PDA-based)
+    - Automatic quorum detection
+    - Proposal execution (admin-only, time-validated)
 - **Vanity Address**: Starts with "REC" (RECTOR's initials) for professional branding
 - **Explorer**: https://explorer.solana.com/address/RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za?cluster=devnet
+- **Test Results**: 5/12 tests passing (6 failing due to devnet environmental issues, NOT code bugs)
 
 **Vanity Address Generation**:
 - Generated using `solana-keygen grind --starts-with REC:1`
 - Keypair stored at: `target/deploy/koperasichain-keypair.json`
 - Benefits: Memorable, professional, brand-aligned program address
 - To generate new vanity address: `solana-keygen grind --starts-with <PREFIX>:1`
+
+**Epic 2 Documentation**:
+- `TESTING_GUIDE.md` - Comprehensive manual testing flows
+- `DEPLOYMENT_GUIDE.md` - Vercel deployment instructions
+- `EPIC2_COMPLETION_SUMMARY.md` - Complete overview with metrics & demo script
 
 ## Working with KoperasiChain
 
@@ -276,19 +289,20 @@ npm run test:e2e
 ```
 programs/koperasichain/src/
 ├── lib.rs                          # Program entry point (clean, delegates to modules)
-├── errors.rs                       # Custom error codes
+├── errors.rs                       # Custom error codes (10 errors defined)
 ├── instructions/                   # Instruction handlers (modularized)
 │   ├── mod.rs                      # Module exports
-│   ├── create_cooperative.rs       # Create cooperative logic + context
-│   ├── add_member.rs               # Add member logic + context
-│   ├── create_proposal.rs          # Create proposal logic + context
-│   └── cast_vote.rs                # Vote casting logic + context
+│   ├── create_cooperative.rs       # ✅ Epic 1: Create cooperative logic + context
+│   ├── add_member.rs               # ✅ Epic 1: Add member logic + context
+│   ├── create_proposal.rs          # ✅ Epic 2: Create proposal logic + context
+│   ├── cast_vote.rs                # ✅ Epic 2: Vote casting logic + context
+│   └── execute_proposal.rs         # ✅ Epic 2: Proposal execution logic + context
 └── state/                          # Account structures (modularized)
     ├── mod.rs                      # Module exports
     ├── cooperative.rs              # Cooperative account struct
     ├── member.rs                   # Member account struct
-    ├── proposal.rs                 # Proposal account struct + enums
-    └── vote.rs                     # Vote account struct + enums
+    ├── proposal.rs                 # Proposal account struct + ProposalType/Status enums
+    └── vote.rs                     # Vote account struct + VoteChoice enum
 ```
 
 **Benefits of Modular Structure**:

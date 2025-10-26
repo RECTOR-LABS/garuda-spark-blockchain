@@ -40,4 +40,10 @@ pub enum ErrorCode {
 
     #[msg("Vote count overflow")]
     VoteCountOverflow,
+
+    #[msg("Proposal has not passed - cannot execute")]
+    ProposalNotPassed,
+
+    #[msg("Voting period has not ended yet")]
+    VotingPeriodNotEnded,
 }

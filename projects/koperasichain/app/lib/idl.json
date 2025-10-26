@@ -1,5 +1,5 @@
 {
-  "address": "4GVcmbRKrGWLR1fSttYYtgCmbbLSViLcYUpHvq4cwWZQ",
+  "address": "RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za",
   "metadata": {
     "name": "koperasichain",
     "version": "0.1.0",
@@ -9,9 +9,6 @@
   "instructions": [
     {
       "name": "add_member",
-      "docs": [
-        "Add a member to an existing cooperative"
-      ],
       "discriminator": [
         13,
         116,
@@ -74,9 +71,6 @@
     },
     {
       "name": "cast_vote",
-      "docs": [
-        "Cast a vote on a proposal"
-      ],
       "discriminator": [
         20,
         212,
@@ -149,9 +143,6 @@
     },
     {
       "name": "create_cooperative",
-      "docs": [
-        "Create a new cooperative with governance rules"
-      ],
       "discriminator": [
         245,
         29,
@@ -226,9 +217,6 @@
     },
     {
       "name": "create_proposal",
-      "docs": [
-        "Create a proposal for members to vote on"
-      ],
       "discriminator": [
         132,
         116,
@@ -306,6 +294,36 @@
           }
         }
       ]
+    },
+    {
+      "name": "execute_proposal",
+      "discriminator": [
+        186,
+        60,
+        116,
+        133,
+        108,
+        128,
+        111,
+        28
+      ],
+      "accounts": [
+        {
+          "name": "proposal",
+          "writable": true
+        },
+        {
+          "name": "cooperative"
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Only the cooperative authority (admin) can execute proposals"
+          ],
+          "signer": true
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -427,6 +445,16 @@
       "code": 6012,
       "name": "VoteCountOverflow",
       "msg": "Vote count overflow"
+    },
+    {
+      "code": 6013,
+      "name": "ProposalNotPassed",
+      "msg": "Proposal has not passed - cannot execute"
+    },
+    {
+      "code": 6014,
+      "name": "VotingPeriodNotEnded",
+      "msg": "Voting period has not ended yet"
     }
   ],
   "types": [

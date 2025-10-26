@@ -32,13 +32,16 @@ export default function ProposalDetailPage() {
 
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
+  const [executing, setExecuting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [proposal, setProposal] = useState<ProposalData | null>(null);
   const [cooperative, setCooperative] = useState<any>(null);
   const [isMember, setIsMember] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [userVote, setUserVote] = useState<string | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState('');
 
   const fetchData = async () => {
     if (!proposalId || !cooperativeAddress) {
@@ -79,8 +82,14 @@ export default function ProposalDetailPage() {
         name: coopAccount.name,
         memberCount: coopAccount.memberCount,
         quorumPercentage: coopAccount.quorumPercentage,
+        authority: coopAccount.authority.toBase58(),
         ...coopAccount,
       });
+
+      // Check if current wallet is the admin (authority)
+      if (wallet.publicKey) {
+        setIsAdmin(coopAccount.authority.toBase58() === wallet.publicKey.toBase58());
+      }
 
       // Check if current wallet is a member and if they've voted
       if (wallet.publicKey) {
@@ -114,6 +123,41 @@ export default function ProposalDetailPage() {
   useEffect(() => {
     fetchData();
   }, [proposalId, cooperativeAddress, connection, wallet.publicKey]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (!proposal) return;
+
+    const updateCountdown = () => {
+      const now = Date.now() / 1000;
+      const secondsRemaining = proposal.endsAt - now;
+
+      if (secondsRemaining <= 0) {
+        setTimeRemaining('Voting ended');
+        return;
+      }
+
+      const days = Math.floor(secondsRemaining / 86400);
+      const hours = Math.floor((secondsRemaining % 86400) / 3600);
+      const minutes = Math.floor((secondsRemaining % 3600) / 60);
+      const seconds = Math.floor(secondsRemaining % 60);
+
+      if (days > 0) {
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m remaining`);
+      } else if (hours > 0) {
+        setTimeRemaining(`${hours}h ${minutes}m ${seconds}s remaining`);
+      } else if (minutes > 0) {
+        setTimeRemaining(`${minutes}m ${seconds}s remaining`);
+      } else {
+        setTimeRemaining(`${seconds}s remaining`);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [proposal]);
 
   const handleVote = async (voteChoice: 'Yes' | 'No' | 'Abstain') => {
     if (!wallet.publicKey || !wallet.signTransaction) {
@@ -171,6 +215,60 @@ export default function ProposalDetailPage() {
       setError(err.message || 'Failed to cast vote');
     } finally {
       setVoting(false);
+    }
+  };
+
+  const handleExecute = async () => {
+    if (!wallet.publicKey || !wallet.signTransaction) {
+      setError('Please connect your wallet first');
+      return;
+    }
+
+    if (!isAdmin) {
+      setError('Only the cooperative admin can execute proposals');
+      return;
+    }
+
+    if (proposal?.status.toLowerCase() !== 'passed') {
+      setError('Only passed proposals can be executed');
+      return;
+    }
+
+    const now = Date.now() / 1000;
+    if (proposal && now <= proposal.endsAt) {
+      setError('Cannot execute proposal before voting period ends');
+      return;
+    }
+
+    setExecuting(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const program = getProgram(wallet as any, connection);
+      const proposalPubkey = new PublicKey(proposalId);
+      const coopPubkey = new PublicKey(cooperativeAddress);
+
+      const tx = await program.methods
+        .executeProposal()
+        .accounts({
+          proposal: proposalPubkey,
+          cooperative: coopPubkey,
+          authority: wallet.publicKey,
+        })
+        .rpc();
+
+      setSuccess(`Proposal executed successfully! Transaction: ${tx}`);
+
+      // Refresh proposal data
+      setTimeout(() => {
+        fetchData();
+      }, 1000);
+    } catch (err: any) {
+      console.error('Error executing proposal:', err);
+      setError(err.message || 'Failed to execute proposal');
+    } finally {
+      setExecuting(false);
     }
   };
 
@@ -305,6 +403,9 @@ export default function ProposalDetailPage() {
             <div>
               <span className="text-gray-500">Voting ends:</span>
               <p className="text-gray-900 mt-1">{new Date(proposal.endsAt * 1000).toLocaleDateString()}</p>
+              {isVotingActive && timeRemaining && (
+                <p className="text-sm font-semibold text-indigo-600 mt-1">⏱️ {timeRemaining}</p>
+              )}
             </div>
           </div>
         </div>
@@ -473,7 +574,7 @@ export default function ProposalDetailPage() {
         )}
 
         {/* Voting Ended */}
-        {!isVotingActive && proposal.status.toLowerCase() !== 'active' && (
+        {!isVotingActive && proposal.status.toLowerCase() !== 'active' && proposal.status.toLowerCase() !== 'passed' && (
           <div className="bg-white rounded-xl shadow-md p-8">
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -484,6 +585,75 @@ export default function ProposalDetailPage() {
               <h3 className="text-xl font-bold text-gray-900 mb-2">Voting Has Ended</h3>
               <p className="text-gray-600">
                 This proposal ended on {new Date(proposal.endsAt * 1000).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Execute Proposal (Admin Only) */}
+        {isAdmin && proposal.status.toLowerCase() === 'passed' && !isVotingActive && (
+          <div className="bg-white rounded-xl shadow-md p-8">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Proposal Passed!</h3>
+              <p className="text-gray-600 mb-6">
+                This proposal has been approved by the members. As the admin, you can now execute it.
+              </p>
+
+              {error && (
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-800">{error}</p>
+                </div>
+              )}
+
+              {success && (
+                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm text-green-800 break-all">{success}</p>
+                </div>
+              )}
+
+              <button
+                onClick={handleExecute}
+                disabled={executing}
+                className="px-8 py-4 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 mx-auto"
+              >
+                {executing ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Executing...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                    Execute Proposal
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Proposal Executed */}
+        {proposal.status.toLowerCase() === 'executed' && (
+          <div className="bg-white rounded-xl shadow-md p-8">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Proposal Executed</h3>
+              <p className="text-gray-600">
+                This proposal has been successfully executed by the cooperative admin.
               </p>
             </div>
           </div>

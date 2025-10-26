@@ -3,7 +3,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import idl from './idl.json';
 
-const PROGRAM_ID = new PublicKey('4GVcmbRKrGWLR1fSttYYtgCmbbLSViLcYUpHvq4cwWZQ');
+const PROGRAM_ID = new PublicKey('RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za');
 
 export function getProgram(wallet: AnchorWallet, connection: Connection) {
   const provider = new AnchorProvider(

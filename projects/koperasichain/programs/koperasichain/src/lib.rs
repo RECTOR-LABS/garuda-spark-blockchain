@@ -45,4 +45,8 @@ pub mod koperasichain {
     pub fn cast_vote(ctx: Context<CastVote>, vote_choice: VoteChoice) -> Result<()> {
         instructions::cast_vote::cast_vote(ctx, vote_choice)
     }
+
+    pub fn execute_proposal(ctx: Context<ExecuteProposal>) -> Result<()> {
+        instructions::execute_proposal::execute_proposal(ctx)
+    }
 }

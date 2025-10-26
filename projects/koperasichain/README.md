@@ -33,19 +33,21 @@ Blockchain-powered digital cooperative platform enabling:
 
 ## Core Features (MVP - 23 Days)
 
-### Phase 1: Foundation (Days 1-7)
-- [ ] Cooperative registration smart contract
-- [ ] Member wallet integration
-- [ ] Basic UI scaffold (mobile-first)
+### Phase 1: Foundation (Days 1-7) ✅ COMPLETE
+- [x] Cooperative registration smart contract
+- [x] Member wallet integration
+- [x] Basic UI scaffold (mobile-first)
 
-### Phase 2: Core Features (Days 8-14)
-- [ ] Deposit/contribution tracking
-- [ ] Voting mechanism (proposals + real-time tallying)
-- [ ] Treasury management smart contract
-- [ ] Mobile PWA setup
+### Phase 2: Core Features (Days 8-14) ✅ COMPLETE (Oct 25, 2025)
+- [ ] Deposit/contribution tracking (Epic 3 - Treasury)
+- [x] Voting mechanism (proposals + real-time tallying)
+- [x] Democratic governance with quorum detection
+- [x] Proposal execution (admin-only)
+- [ ] Treasury management smart contract (Epic 3)
+- [x] Mobile PWA setup
 
 ### Phase 3: Polish (Days 15-21)
-- [ ] Auto-dividend distribution
+- [ ] Auto-dividend distribution (Epic 3)
 - [ ] Transaction history dashboard
 - [ ] Member leaderboard/reputation
 - [ ] Demo video production
@@ -85,37 +87,41 @@ koperasichain/
 ├── programs/
 │   └── koperasichain/
 │       ├── src/
-│       │   ├── lib.rs                 # Main program
+│       │   ├── lib.rs                 # Main program (5 instructions)
 │       │   ├── instructions/
-│       │   │   ├── create_cooperative.rs
-│       │   │   ├── add_member.rs
-│       │   │   ├── create_proposal.rs
-│       │   │   ├── vote.rs
-│       │   │   └── distribute_dividends.rs
+│       │   │   ├── create_cooperative.rs     # ✅ Epic 1
+│       │   │   ├── add_member.rs             # ✅ Epic 1
+│       │   │   ├── create_proposal.rs        # ✅ Epic 2
+│       │   │   ├── cast_vote.rs              # ✅ Epic 2
+│       │   │   └── execute_proposal.rs       # ✅ Epic 2
 │       │   ├── state/
-│       │   │   ├── cooperative.rs
-│       │   │   ├── member.rs
-│       │   │   └── proposal.rs
-│       │   └── errors.rs
+│       │   │   ├── cooperative.rs            # Cooperative account
+│       │   │   ├── member.rs                 # Member account
+│       │   │   ├── proposal.rs               # Proposal + ProposalType/Status
+│       │   │   └── vote.rs                   # Vote + VoteChoice
+│       │   └── errors.rs                     # 10 custom errors
 │       └── Cargo.toml
-├── app/
+├── app/                                      # Next.js 15.5.4 frontend
 │   ├── app/
 │   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   ├── cooperative/
-│   │   ├── dashboard/
-│   │   └── api/
-│   ├── components/
-│   │   ├── wallet/
-│   │   ├── ui/
-│   │   └── features/
+│   │   ├── page.tsx                         # ✅ Cooperative creation
+│   │   ├── join/page.tsx                    # ✅ Member invitation
+│   │   └── dashboard/
+│   │       └── [address]/
+│   │           ├── page.tsx                  # ✅ Dashboard
+│   │           └── proposals/
+│   │               ├── page.tsx              # ✅ Epic 2: Proposal list
+│   │               ├── create/page.tsx       # ✅ Epic 2: Create proposal
+│   │               └── [proposalId]/page.tsx # ✅ Epic 2: Vote & execute
 │   ├── lib/
-│   │   ├── solana/
-│   │   ├── supabase/
-│   │   └── utils/
+│   │   ├── anchor.ts                        # ✅ Program integration
+│   │   └── idl.json                         # ✅ Updated IDL
 │   └── package.json
 ├── tests/
-├── docs/
+│   └── koperasichain.ts                     # ✅ 12 tests (5 passing)
+├── TESTING_GUIDE.md                         # ✅ Epic 2 testing flows
+├── DEPLOYMENT_GUIDE.md                      # ✅ Vercel deployment
+├── EPIC2_COMPLETION_SUMMARY.md              # ✅ Complete overview
 └── README.md
 ```
 
@@ -138,8 +144,10 @@ npm run dev:all    # Run frontend + watch smart contracts
 
 ## Links
 
-- **Live Demo**: TBD (deploy to Vercel)
-- **Solana Explorer**: TBD (devnet program ID)
+- **Live Demo**: http://localhost:3001 (dev server) | TBD (Vercel deployment pending)
+- **Solana Explorer**: https://explorer.solana.com/address/RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za?cluster=devnet
+- **Program ID**: `RECs4kXKatsFrGWckRqBujXL2Qs9FLDeFcF9PYCZ3Za` (Devnet)
+- **Documentation**: See TESTING_GUIDE.md, DEPLOYMENT_GUIDE.md, EPIC2_COMPLETION_SUMMARY.md
 - **GitHub**: TBD (this repo when public)
 - **Demo Video**: TBD (YouTube link)
 

@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { SystemProgram, PublicKey } from '@solana/web3.js';
 import { getProgram, getMemberPDA, getProposalPDA } from '@/lib/anchor';
 import Link from 'next/link';
-
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 export default function CreateProposalPage() {
   const { connection } = useConnection();
   const wallet = useWallet();
@@ -144,7 +143,7 @@ export default function CreateProposalPage() {
                   Devnet
                 </span>
               </Link>
-              <WalletMultiButton />
+              <WalletButton />
             </div>
           </div>
         </nav>
@@ -163,7 +162,7 @@ export default function CreateProposalPage() {
             </p>
             <div className="flex flex-col gap-3">
               {!wallet.connected ? (
-                <WalletMultiButton className="!w-full" />
+                <WalletButton className="!w-full" />
               ) : (
                 <Link
                   href={`/dashboard/${cooperativeAddress}`}
@@ -190,7 +189,7 @@ export default function CreateProposalPage() {
                 Devnet
               </span>
             </Link>
-            <WalletMultiButton />
+            <WalletButton />
           </div>
         </div>
       </nav>

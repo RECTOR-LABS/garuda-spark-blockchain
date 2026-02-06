@@ -3,11 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { SystemProgram, PublicKey } from '@solana/web3.js';
 import { getProgram, getMemberPDA, getVotePDA } from '@/lib/anchor';
 import Link from 'next/link';
-
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 interface ProposalData {
   address: string;
   cooperative: string;
@@ -355,7 +354,7 @@ export default function ProposalDetailPage() {
                 Devnet
               </span>
             </Link>
-            <WalletMultiButton />
+            <WalletButton />
           </div>
         </div>
       </nav>
@@ -568,7 +567,7 @@ export default function ProposalDetailPage() {
                   ? 'Connect your wallet to participate in voting'
                   : 'Only active cooperative members can vote on proposals'}
               </p>
-              {!wallet.connected && <WalletMultiButton />}
+              {!wallet.connected && <WalletButton />}
             </div>
           </div>
         )}

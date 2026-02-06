@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { SystemProgram } from '@solana/web3.js';
 import { getProgram, getCooperativePDA } from '@/lib/anchor';
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 
 export default function Home() {
   const { connection } = useConnection();
@@ -86,7 +86,7 @@ export default function Home() {
                 Devnet
               </span>
             </div>
-            <WalletMultiButton />
+            <WalletButton />
           </div>
         </div>
       </nav>
@@ -106,7 +106,7 @@ export default function Home() {
               Create and manage digital cooperatives on Solana blockchain.
               Connect your wallet to get started.
             </p>
-            <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-700" />
+            <WalletButton className="!bg-indigo-600 hover:!bg-indigo-700" />
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl p-8">

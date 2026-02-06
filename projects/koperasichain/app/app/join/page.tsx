@@ -3,8 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { SystemProgram, PublicKey } from '@solana/web3.js';
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 import { getProgram, getMemberPDA } from '@/lib/anchor';
 import Link from 'next/link';
 
@@ -136,7 +136,7 @@ function JoinPageContent() {
                 Devnet
               </span>
             </Link>
-            <WalletMultiButton />
+            <WalletButton />
           </div>
         </div>
       </nav>
@@ -232,7 +232,7 @@ function JoinPageContent() {
             {!wallet.connected ? (
               <div className="text-center">
                 <p className="text-gray-600 mb-6">Connect your wallet to join this cooperative</p>
-                <WalletMultiButton className="!bg-indigo-600 hover:!bg-indigo-700" />
+                <WalletButton className="!bg-indigo-600 hover:!bg-indigo-700" />
               </div>
             ) : (
               <button

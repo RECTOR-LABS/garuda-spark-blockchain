@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { PublicKey } from '@solana/web3.js';
 import { getProgram, getMemberPDA } from '@/lib/anchor';
 import Link from 'next/link';
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 
 interface ProposalData {
   address: string;
@@ -197,7 +197,7 @@ export default function ProposalsPage() {
                 Devnet
               </span>
             </Link>
-            <WalletMultiButton />
+            <WalletButton />
           </div>
         </div>
       </nav>

@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { PublicKey } from '@solana/web3.js';
 import { getProgram } from '@/lib/anchor';
 import Link from 'next/link';
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 import ReputationBadge, { getNextMilestone } from '@/components/reputation/ReputationBadge';
 
 interface CooperativeData {
@@ -163,7 +163,7 @@ export default function Leaderboard() {
                 ← Back to Dashboard
               </Link>
             </div>
-            <WalletMultiButton />
+            <WalletButton />
           </div>
         </div>
       </nav>

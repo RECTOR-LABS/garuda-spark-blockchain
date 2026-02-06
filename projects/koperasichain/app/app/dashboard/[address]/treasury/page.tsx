@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { getProgram } from '@/lib/anchor';
 import { BN } from '@coral-xyz/anchor';
 import Link from 'next/link';
+import { WalletButton } from '@/app/components/wallet/WalletButton';
 
 interface TreasuryData {
   cooperative: string;
@@ -278,7 +278,7 @@ export default function TreasuryDashboard() {
               <p className="text-gray-600 mt-2">{cooperative.name}</p>
             )}
           </div>
-          <WalletMultiButton />
+          <WalletButton />
         </div>
 
         {/* Alerts */}
